@@ -141,6 +141,10 @@ def replay(
     adjustments_by_student: dict[str, list[Adjustment]] = {}
 
     for event in sorted_events:
+        # 留存处置后仅保留指纹的明细已无原始内容，重放时跳过；
+        # 已签发的冻结快照是独立 JSON，不受影响。
+        if event.payload.get("redacted"):
+            continue
         if event.event_type == EventType.CHECKIN:
             record = _parse_checkin(event, timezone_name)
             checkins_by_student.setdefault(event.student_id, []).append(record)

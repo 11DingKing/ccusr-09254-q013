@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 
 from . import services
 from .db import get_db
+from .retention.router import router as retention_router
 from .schemas import (
     DiffOut,
     EventBatchIn,
@@ -21,6 +22,7 @@ from .schemas import (
 )
 
 router = APIRouter(prefix="/api")
+router.include_router(retention_router)
 
 
 @router.post("/plans", response_model=PlanOut, status_code=status.HTTP_201_CREATED)
